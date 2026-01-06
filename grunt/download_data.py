@@ -56,7 +56,7 @@ def download():
 
         ###open the file and create the header#
         f = open('stats.csv', 'a', encoding="utf-8")
-        f.write('date,runtype,distance,duration,pace,elevation,calories,calories,hr,eventtype\n')
+        f.write('date,runtype,distance,duration,pace,elevation,calories,hr,eventtype\n')
 
     ###if the last day is different from today...
     if past != today:
@@ -94,7 +94,7 @@ def download():
                         hr = str(numpy.nan)
                     eventtype = i['eventType']['typeKey']
                     ###create the line and write it to file
-                    line = f'{daterun},{runtype},{distance},{duration},{pace},{elevation},{calories},{calories},{hr},{eventtype}\n'
+                    line = f'{daterun},{runtype},{distance},{duration},{pace},{elevation},{calories},{hr},{eventtype}\n'
                     f.write(line)
 
         f.close()

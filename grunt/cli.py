@@ -41,7 +41,7 @@ def command_line_interface(args):
     ###add arguments
     parser.add_argument('--download', action='store_true',
                         help='Get the data from garmin connect')
-    parser.add_argument('--yearcal', type=int,
+    parser.add_argument('--yearcal', type=str,
                         help='The year you want the calendar for, default is current year')
     parser.add_argument('--compare_distance',
                         action='store_true',

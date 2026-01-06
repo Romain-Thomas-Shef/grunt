@@ -14,10 +14,15 @@ changelog:
 
 ####Standard Library
 import sys
+import os
+
+####Third party
 
 ####Local imports
 from . import cli
 from . import download_data
+from . import data_process
+from . import plots
 
 def main():
     '''
@@ -33,6 +38,24 @@ def main():
 
     elif args['yearcal']:
         print(f"Making calendar plot for {args['yearcal']}")
+
+        ###check if file exists
+        if not os.path.isfile('stats.csv'):
+            question = input('File stats.csv not found in working directory'+
+                             '..do you want to create one?[y/n]')
+            if question in ['y', 'Y', 'yes']:
+                download_data.download()
+            else:
+                print('Data not found and not created...exit...')
+                sys.exit()
+
+        ###load the data
+        dates, values,\
+               total, average = data_process.create_data_calendar(data_process.load_data_csv('stats.csv'),
+                                                                  'distance', args['yearcal'])
+        ###make the calendar
+        plots.create_calendar(dates, values,
+                              f"{args['yearcal']}, Current total {round(total, 2)} km; average run length = {round(average,2)} km/day", False)
 
     else:
         print('Nothing to do....exit...')
