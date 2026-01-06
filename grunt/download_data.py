@@ -44,7 +44,7 @@ def download():
 
     ##check if a file exist
     if os.path.isfile('stats.csv'):
-        print('Found already a stats.csv file...check for last date')
+        print('\nFound already a stats.csv file...check for last date')
         data = pandas.read_csv('stats.csv', parse_dates=['date'])
         ##And get the last date in the file
         past = data['date'].iloc[-1].date()
@@ -52,7 +52,7 @@ def download():
         f = open('stats.csv', 'a', encoding="utf-8")
     else:
         ##We download the last 20 years
-        past = today - datetime.timedelta(days=7*365)
+        past = today - datetime.timedelta(days=20*365)
 
         ###open the file and create the header#
         f = open('stats.csv', 'a', encoding="utf-8")
@@ -60,7 +60,7 @@ def download():
 
     ###if the last day is different from today...
     if past != today:
-        print('Create/Append to stats.csv file....this may take a while...for the first download')
+        print('\nCreate/Append to stats.csv file....this may take a while...for the first download')
 
         ###Get all dates
         alldates = numpy.arange(past, today+datetime.timedelta(days=1),
