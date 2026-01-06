@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "grunt"
+version = "26.1.1"
+requires-python = ">=3.9"
+authors = [{ name = "R. Thomas", email = "romain.thomas@sheffield.ac.uk" }]
+dependencies = ["pandas",
+                "matplotlib",
+                "numpy",
+                "july",
+                'garminconnect']
+
+[project.urls]
+repository = "https://github.com/Romain-Thomas-Shef/grunt"
+#homepage = "https://romain-thomas-shef.github.io/STON/index.html"
+
+
+[project.scripts]
+ston = "grunt.main:main"
+
+[tool.hatch.build.targets.sdist]
+include = ["/grunt"]
