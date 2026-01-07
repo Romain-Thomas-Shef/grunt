@@ -52,7 +52,7 @@ def download():
         f = open('stats.csv', 'a', encoding="utf-8")
     else:
         ##We download the last 20 years
-        past = today - datetime.timedelta(days=20*365)
+        past = today - datetime.timedelta(days=7*365)
 
         ###open the file and create the header#
         f = open('stats.csv', 'a', encoding="utf-8")
@@ -63,12 +63,12 @@ def download():
         print('\nCreate/Append to stats.csv file....this may take a while...for the first download')
 
         ###Get all dates
-        alldates = numpy.arange(past, today+datetime.timedelta(days=1),
+        alldates = numpy.arange(past.date(), today.date()+datetime.timedelta(days=1),
                                 datetime.timedelta(days=1)).astype(datetime.datetime)
 
         for d in tqdm(alldates):
             ##get the activities for that date
-            activities = garmin.get_activities_by_date(startdate=d, enddate=d)
+            activities = garmin.get_activities_by_date(startdate=str(d.date()), enddate=str(d.date()))
             for i in activities:
                 ##only get the running activities
                 if i['activityType']['typeKey'] in ['running', 'trail_running',
