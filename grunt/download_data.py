@@ -47,7 +47,7 @@ def download():
         print('\nFound already a stats.csv file...check for last date')
         data = pandas.read_csv('stats.csv', parse_dates=['date'])
         ##And get the last date in the file
-        past = data['date'].iloc[-1].date()
+        past = data['date'].iloc[-1].date() + datetime.timedelta(days=1)
         ###open the file
         f = open('stats.csv', 'a', encoding="utf-8")
     else:
