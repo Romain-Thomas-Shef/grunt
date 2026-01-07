@@ -20,7 +20,7 @@ from garminconnect import Garmin
 
 ##Local imports
 
-def download():
+def download(conf):
     '''
     This function download all the data from garmin connect
     it will save them in a txt file call stats.csv.
@@ -28,7 +28,8 @@ def download():
 
     Parameters
     -----------
-    none
+    conf    :   dictionary
+                with configuration [just the 'Data' part]
 
     Returns
     -------
@@ -51,8 +52,8 @@ def download():
         ###open the file
         f = open('stats.csv', 'a', encoding="utf-8")
     else:
-        ##We download the last 20 years
-        past = today - datetime.timedelta(days=7*365)
+        ##We download the last X years (x given in the configuration)
+        past = today - datetime.timedelta(days=int(conf['yearsback'])*365)
 
         ###open the file and create the header#
         f = open('stats.csv', 'a', encoding="utf-8")
@@ -63,7 +64,7 @@ def download():
         print('\nCreate/Append to stats.csv file....this may take a while...for the first download')
 
         ###Get all dates
-        alldates = numpy.arange(past.date(), today.date()+datetime.timedelta(days=1),
+        alldates = numpy.arange(past, today+datetime.timedelta(days=1),
                                 datetime.timedelta(days=1)).astype(datetime.datetime)
 
         for d in tqdm(alldates):
@@ -71,8 +72,7 @@ def download():
             activities = garmin.get_activities_by_date(startdate=str(d.date()), enddate=str(d.date()))
             for i in activities:
                 ##only get the running activities
-                if i['activityType']['typeKey'] in ['running', 'trail_running',
-                                                    'treadmill_running', 'ultra_run']:
+                if i['activityType']['typeKey'] in conf['runtype'].split(','):
 
                     ####Get all the useful data from the activity
                     runtype = i['activityType']['typeKey']
