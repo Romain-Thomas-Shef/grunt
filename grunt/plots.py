@@ -30,7 +30,14 @@ def create_calendar(dates, values, title, save):
     '''
     plot, fig = july.heatmap(dates, values, title=title, cmap="gnuplot", year_label=False)
     fig.tight_layout()
- 
+    
+    ###Add credit
+    credit = True
+    if credit:
+        plt.figtext(0.93, 0.2, f'Made with GRUNT', fontsize=9)
+
+
+    ###Saving or showing
     if not save:
         plt.show()
     else:
