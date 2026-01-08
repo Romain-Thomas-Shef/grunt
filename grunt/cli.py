@@ -46,6 +46,9 @@ def command_line_interface(args):
     parser.add_argument('--compare_distance',
                         action='store_true',
                         help='Will compare the distance for all the years available in the data')
+    parser.add_argument('--conf', type=str, help='Configuration file, if not used, GRUNT will use default')
+    parser.add_argument('--save', action='store_true',
+                        help='Instead of showing the plot, it will be saved (need a custom conf file)')
 
     ###analyse the arguments
     parsed = vars(parser.parse_args(args))

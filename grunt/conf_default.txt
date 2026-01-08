@@ -1,0 +1,13 @@
+[Data]
+yearsback = 20
+runtype = ultra_run,treadmill_running,trail_running,running
+
+
+[Plot]
+background = 0.93,0.91,0.82
+text = 0.16,0.16,0.20
+colormap_calendar = gnuplot
+credit = true
+
+[Output]
+directory =  test

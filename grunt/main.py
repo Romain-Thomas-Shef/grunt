@@ -23,6 +23,7 @@ from . import cli
 from . import download_data
 from . import data_process
 from . import plots
+from .load_conf import load
 
 def main():
     '''
@@ -33,8 +34,25 @@ def main():
     ##arguments
     args = cli.command_line_interface(sys.argv[1:])
 
+    ##check configuration
+    if args['conf'] is None:
+        print('No configuration file found, using default...')
+        conffile = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'conf_default.txt')
+
+    else:
+        if os.path.isfile(args['conf']):
+            conffile = args['conf']
+            print('Configuration file found...continue')
+        else:
+            print('Configuration file not found...exit')
+            sys.exit()
+
+    ##and load it
+    conf = load(conffile)
+
+    ###Then analyse each argument
     if args['download']:
-        download_data.download()
+        download_data.download(conf['Data'])
 
     elif args['yearcal']:
         print(f"Making calendar plot for {args['yearcal']}")
@@ -53,9 +71,15 @@ def main():
         dates, values,\
                total, average = data_process.create_data_calendar(data_process.load_data_csv('stats.csv'),
                                                                   'distance', args['yearcal'])
+        ###see if we save the plot
+        save = False
+        if args['save']:
+            save = True
+
         ###make the calendar
-        plots.create_calendar(dates, values,
-                              f"{args['yearcal']}, Current total {round(total, 2)} km; average run length = {round(average,2)} km/day", False)
+        title = f"{args['yearcal']}, Current total {round(total, 2)} km; average run length = {round(average,2)} km"
+        filename = f"calendar_{args['yearcal']}.png"
+        plots.create_calendar(dates, values, title, save, conf, filename)
 
     else:
         print('Nothing to do....exit...')
