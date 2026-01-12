@@ -37,7 +37,7 @@ def load_data_csv(file):
     return data
 
 
-def create_data_calendar(data, parameter, year):
+def create_data_calendar(data, parameter, year, log=True, cut=False):
     '''
     This function creates to array:
         - one for dates
@@ -51,6 +51,10 @@ def create_data_calendar(data, parameter, year):
                 parameter to plot in the calendar
     year    :   str
                 year to consider
+    log     :   bool
+                to use a logarithmic scale
+    cut     :   bool
+                if we cut the last year at today's date
     '''
     #Check that the parameter exists
     if parameter not in list(data):
@@ -60,6 +64,10 @@ def create_data_calendar(data, parameter, year):
     ##çreate the date range
     start = datetime.strptime(year+"-01-01", "%Y-%m-%d").date()
     end = datetime.strptime(year+"-12-31", "%Y-%m-%d").date()
+    
+    if cut is True and end>datetime.today().date():
+        end = datetime.today().date()
+
     date_range = numpy.arange(start, end, timedelta(days=1)).astype(datetime)
 
 
@@ -76,7 +84,10 @@ def create_data_calendar(data, parameter, year):
         value = 0
         if activities.shape[0]>0: #Check number of rows
             if parameter in ['distance', 'calories', 'duration', 'elevation']:
-                value = numpy.log(sum(activities[parameter]))
+                if log:
+                    value = numpy.log(sum(activities[parameter]))
+                else:
+                    value = sum(activities[parameter])
                 total += sum(activities[parameter])
                 average.append(sum(activities[parameter]))
 
@@ -88,3 +99,51 @@ def create_data_calendar(data, parameter, year):
         parameter_data[i] = value
 
     return date_range, parameter_data, total, numpy.mean(average)
+
+
+def get_years_available(data):
+    '''
+    From a list-like of dates, find which years it is
+    spanning.
+
+    Parameters
+    ----------
+    data   :   data frame 
+               with a 'date' column
+
+    Return
+    ------
+    years   :   list
+                of years (as str)
+    '''
+    ###get oldest and latest date
+    first_year = min(data['date']).date().year
+    last_year = max(data['date']).date().year
+
+    ###create the full list of year
+    years = [str(first_year)]
+    i = first_year
+    while i<last_year:
+        i += 1
+        years.append(i)
+
+    return years
+
+
+def overlap_year(year, requested_year=2020):
+    '''
+    Take a list of dates and change the year bit
+    to the requested one
+
+    Parameter
+    ---------
+    year    :   lsit
+                of dates
+    requested_year: int
+                    year to change from
+    '''
+    newyear = []
+    for i in year:
+        newyear.append(i.replace(year=int(requested_year))) 
+
+    return newyear

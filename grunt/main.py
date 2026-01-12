@@ -17,6 +17,7 @@ import sys
 import os
 
 ####Third party
+import numpy
 
 ####Local imports
 from . import cli
@@ -80,6 +81,45 @@ def main():
         title = f"{args['yearcal']}, Current total {round(total, 2)} km; average run length = {round(average,2)} km"
         filename = f"calendar_{args['yearcal']}.png"
         plots.create_calendar(dates, values, title, save, conf, filename)
+
+
+    elif args['compare_distance']:
+        print(f"Making distance plots over the years")
+
+        ###check if file exists
+        if not os.path.isfile('stats.csv'):
+            question = input('File stats.csv not found in working directory'+
+                             '..do you want to create one?[y/n]')
+            if question in ['y', 'Y', 'yes']:
+                download_data.download()
+            else:
+                print('Data not found and not created...exit...')
+                sys.exit()
+
+        ##load data
+        data = data_process.load_data_csv('stats.csv')
+
+        ##get the years
+        years = data_process.get_years_available(data)
+
+        ###And corresponding data
+        years_km = dict.fromkeys(years)
+        for year in years:
+            ###load the data
+            dates, values, total, \
+                   average = data_process.create_data_calendar(data, 'distance', str(year), False, cut=True)
+            years_km[year] = [data_process.overlap_year(dates, '2020'), numpy.cumsum(values)] 
+
+        ###see if we save the plot
+        save = False
+        if args['save']:
+            save = True
+
+        ##make the plot
+        filename = f"Compare_distance_year.png"
+        plots.compare_year(years_km, 'Cumulative km / year', 'distance [km]', save, conf, filename)
+
+
 
     else:
         print('Nothing to do....exit...')

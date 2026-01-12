@@ -7,7 +7,11 @@ runtype = ultra_run,treadmill_running,trail_running,running
 background = 0.93,0.91,0.82
 text = 0.16,0.16,0.20
 colormap_calendar = gnuplot
+###Would be nice to leave credit=true :) 
 credit = true
+###the number of colors and signs should match the number of years in the data
+compare_colors = beige,beige,beige,beige,beige,beige,beige,red
+compare_signs = .,s,+,_,p,o,x,-.
 
 [Output]
 directory =  test
