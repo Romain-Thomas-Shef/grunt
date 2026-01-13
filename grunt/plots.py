@@ -89,7 +89,7 @@ def compare_year(data, title, ylabel, save, conf, filename):
     ###text
     color_text = tuple(float(i)/255 for i in conf['Plot']['text'].split(','))
     plot.set_title(title, color=color_text)
-    plot.axes.tick_params(color=color_text, labelcolor=color_text)
+    plot.axes.tick_params(color=color_text, labelcolor=color_text, which="both")
     plot.set_xlabel('Day-Month', color=color_text)
     plot.set_ylabel(ylabel, color=color_text)
  
@@ -102,6 +102,14 @@ def compare_year(data, title, ylabel, save, conf, filename):
     plot.legend(loc = 'upper left', fancybox=False, framealpha=0, labelcolor=color_text, ncol=2)
     plot.xaxis.set_minor_locator(mdates.MonthLocator())
     plot.xaxis.set_major_formatter(mdates.DateFormatter('%b'))
+    plot.tick_params(axis="both",direction="in", top=True, right=True)
+    plot.tick_params(axis="both",which="minor", bottom=False)
+    
+
+
+    ###frame color
+    for spine in plot.spines.values():
+        spine.set_edgecolor(color_text)
 
     ###Add credit
     if conf['Plot']['credit'].lower() in ['true', 'yes']:
