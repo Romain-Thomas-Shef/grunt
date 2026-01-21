@@ -47,6 +47,6 @@ Table of content
 .. toctree::
  :maxdepth: 1
 
- dev_notes.rst
  installation.rst
  get_started.rst
+ dev_notes.rst
