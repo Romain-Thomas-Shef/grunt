@@ -49,3 +49,4 @@ Table of content
 
  dev_notes.rst
  installation.rst
+ get_started.rst
