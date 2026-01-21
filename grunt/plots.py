@@ -124,3 +124,52 @@ def compare_year(data, title, ylabel, save, conf, filename):
         
 
 
+
+def runtypes_hist(runtypes, save, conf, filename):
+    '''
+    Histogram with run types
+    
+    Parameters
+    ----------
+    dates   :   numpy array
+                with dates
+    save:   bool
+            if we save the plot or not
+    conf:   dict
+            configuration of grunt
+    filename:   str
+                name of the file in case of saving
+    '''
+    fig = plt.figure(dpi=300)
+    plot = fig.add_subplot(111)
+
+    ###adjust background color
+    background = tuple(float(i)/255 for i in conf['Plot']['background'].split(','))
+    fig.patch.set_facecolor(background)
+    plot.set_facecolor(background)
+
+    ###text
+    color_text = tuple(float(i)/255 for i in conf['Plot']['text'].split(','))
+    plot.axes.tick_params(color=color_text, labelcolor=color_text, which="both", bottom=False, top=False, left=False, labelleft=False)
+ 
+    values = plt.bar(runtypes.keys(), runtypes.values(), linestyle='--')
+    plt.bar_label(values, fontsize=15, color='white')
+    
+    plot.xaxis.set_tick_params(pad=-160)
+    xtickNames = plot.set_xticklabels([i.replace('_', ' ') for i in runtypes.keys()], rotation=90)
+
+    ##set ylimit
+    plot.set_ylim(0, max(runtypes.values()) + 2)
+
+
+    ###frame color
+    for spine in plot.spines.values():
+        spine.set_edgecolor(color_text)
+
+    ###Saving or showing
+    if not save:
+        plt.show()
+    else:
+        fig.tight_layout()
+        plt.savefig(os.path.join(conf['Output']['directory'], filename))
+ 

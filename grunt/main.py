@@ -15,6 +15,7 @@ changelog:
 ####Standard Library
 import sys
 import os
+import datetime
 
 ####Third party
 import numpy
@@ -51,6 +52,11 @@ def main():
     ##and load it
     conf = load(conffile)
 
+    ###see if we save the plot
+    save = False
+    if args['save']:
+        save = True
+
     ###Then analyse each argument
     if args['download']:
         download_data.download(conf['Data'])
@@ -72,11 +78,6 @@ def main():
         dates, values,\
                total, average = data_process.create_data_calendar(data_process.load_data_csv('stats.csv'),
                                                                   'distance', args['yearcal'])
-        ###see if we save the plot
-        save = False
-        if args['save']:
-            save = True
-
         ###make the calendar
         title = f"{args['yearcal']}, Current total {round(total, 2)} km; average run length = {round(average,2)} km"
         filename = f"calendar_{args['yearcal']}.png"
@@ -110,14 +111,39 @@ def main():
                    average = data_process.create_data_calendar(data, 'distance', str(year), False, cut=True)
             years_km[year] = [data_process.overlap_year(dates, '2020'), numpy.cumsum(values)] 
 
-        ###see if we save the plot
-        save = False
-        if args['save']:
-            save = True
-
         ##make the plot
         filename = f"Compare_distance_year.png"
         plots.compare_year(years_km, 'Cumulative km / year', 'distance [km]', save, conf, filename)
+
+
+    elif args['runtypes']:
+        print(f"Making runtypes histograms\n")
+
+        ###check if file exists
+        if not os.path.isfile('stats.csv'):
+            question = input('File stats.csv not found in working directory'+
+                             '..do you want to create one?[y/n]')
+            if question in ['y', 'Y', 'yes']:
+                download_data.download()
+            else:
+                print('Data not found and not created...exit...')
+                sys.exit()
+
+        ##load data
+        data = data_process.load_data_csv('stats.csv')
+    
+        ##get the years
+        if args['runtypes'] == 'current':
+            year = datetime.datetime.today().year
+        else:
+            year = args['runtypes']
+
+        ###get the runtypes
+        runtypes = data_process.get_runtypes(data, year, conf)
+
+        ##make the plot
+        filename = f"runtype_{year}.png"
+        plots.runtypes_hist(runtypes, save, conf, filename)
 
 
 

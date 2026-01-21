@@ -64,12 +64,11 @@ def create_data_calendar(data, parameter, year, log=True, cut=False):
     ##çreate the date range
     start = datetime.strptime(year+"-01-01", "%Y-%m-%d").date()
     end = datetime.strptime(year+"-12-31", "%Y-%m-%d").date()
-    
+
     if cut is True and end>datetime.today().date():
         end = datetime.today().date()
 
     date_range = numpy.arange(start, end, timedelta(days=1)).astype(datetime)
-
 
     ##create the correspondionog array for the data
     parameter_data = numpy.zeros(len(date_range))
@@ -109,7 +108,7 @@ def get_years_available(data):
     Parameters
     ----------
     data   :   data frame 
-               with a 'date' column
+               with the 'date' column
 
     Return
     ------
@@ -121,7 +120,7 @@ def get_years_available(data):
     last_year = max(data['date']).date().year
 
     ###create the full list of year
-    years = [str(first_year)]
+    years = [first_year]
     i = first_year
     while i<last_year:
         i += 1
@@ -144,6 +143,51 @@ def overlap_year(year, requested_year=2020):
     '''
     newyear = []
     for i in year:
-        newyear.append(i.replace(year=int(requested_year))) 
+        newyear.append(i.replace(year=int(requested_year)))
 
     return newyear
+
+
+def get_runtypes(data, year, conf):
+    '''
+    Takes the list of dates, and create the
+    dictonary of dates / runtypes
+
+    Parameter
+    ---------
+    data    :   panda dataframe
+                with dates and runtypes columns
+
+    years   :   int
+                year
+                
+    conf    :   dict
+                configuration file
+
+    return
+    ------
+    runtypes    :   nested dict
+                    {year: {runtype1: X, runtype2: Y}, year2: (runtype1: XX, runtype2: YY)....}
+
+    '''
+
+    ##çreate the date range
+    start = datetime.strptime(str(year)+"-01-01", "%Y-%m-%d").date()
+    end = datetime.strptime(str(year)+"-12-31", "%Y-%m-%d").date()
+
+    ##date_range
+    date_range = numpy.arange(start, end, timedelta(days=1)).astype(datetime)
+
+    ##Prepare the dictionary
+    alltypes = conf['Data']['runtype'].split(',')
+    dict_runtype = dict.fromkeys(alltypes, 0)
+
+    ##select from data
+    for i,d in enumerate(date_range):
+        del i
+        activities = data.loc[(data['date'] == pandas.Timestamp(d))]
+        if activities.shape[0]>0: #Check number of rows
+            for run in activities['runtype'].values:
+                dict_runtype[run] += 1
+
+    return dict_runtype
