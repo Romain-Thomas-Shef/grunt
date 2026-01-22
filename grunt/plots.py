@@ -36,7 +36,9 @@ def create_calendar(dates, values, title, save, conf, filename):
     '''
 
     ###make the plot
-    plot, fig = july.heatmap(dates, values, title=title, cmap=conf['Plot']['colormap_calendar'], year_label=False)
+    plot, fig = july.heatmap(dates, values, title=title,
+                             cmap=conf['Plot']['colormap_calendar'],
+                             year_label=False)
     fig.tight_layout()
 
     ###adjust background color
@@ -48,10 +50,10 @@ def create_calendar(dates, values, title, save, conf, filename):
     color_text = tuple(float(i)/255 for i in conf['Plot']['text'].split(','))
     plot.set_title(title, color=color_text)
     plot.axes.tick_params(color=color_text, labelcolor=color_text)
-    
+
     ###Add credit
     if conf['Plot']['credit'].lower() in ['true', 'yes']:
-        plt.figtext(0.93, 0.2, f'Made with GRUNT', fontsize=9, color=color_text)
+        plt.figtext(0.93, 0.2, 'Made with GRUNT', fontsize=9, color=color_text)
 
     ###Saving or showing
     if not save:
@@ -77,8 +79,8 @@ def compare_year(data, title, ylabel, save, conf, filename):
     filename:   str
                 name of the file in case of saving
     '''
-    
-    fig = plt.figure(dpi=int(conf['Plots']['dpi']))
+
+    fig = plt.figure(dpi=int(conf['Plot']['dpi']))
     plot = fig.add_subplot(111)
 
     ###adjust background color
@@ -92,11 +94,12 @@ def compare_year(data, title, ylabel, save, conf, filename):
     plot.axes.tick_params(color=color_text, labelcolor=color_text, which="both")
     plot.set_xlabel('Day-Month', color=color_text)
     plot.set_ylabel(ylabel, color=color_text)
- 
 
     ##add the plot
-    for year,color,marker in zip(data, conf['Plot']['compare_colors'].split(','), conf['Plot']['compare_signs']):
-        plot.plot(data[year][0], data[year][1], color=color, label=year, marker=marker, markersize=3)
+    for year,color,marker in zip(data, conf['Plot']['compare_colors'].split(','),
+                                 conf['Plot']['compare_signs']):
+        plot.plot(data[year][0], data[year][1], color=color, label=year,
+                  marker=marker, markersize=3)
 
     ##add legend
     plot.legend(loc = 'upper left', fancybox=False, framealpha=0, labelcolor=color_text, ncol=2)
@@ -104,8 +107,6 @@ def compare_year(data, title, ylabel, save, conf, filename):
     plot.xaxis.set_major_formatter(mdates.DateFormatter('%b'))
     plot.tick_params(axis="both",direction="in", top=True, right=True)
     plot.tick_params(axis="both",which="minor", bottom=False)
-    
-
 
     ###frame color
     for spine in plot.spines.values():
@@ -113,7 +114,7 @@ def compare_year(data, title, ylabel, save, conf, filename):
 
     ###Add credit
     if conf['Plot']['credit'].lower() in ['true', 'yes']:
-        plt.figtext(0.78, 0.89, f'Made with GRUNT', fontsize=6, color=color_text)
+        plt.figtext(0.78, 0.89, 'Made with GRUNT', fontsize=6, color=color_text)
 
     ###Saving or showing
     if not save:
@@ -121,9 +122,6 @@ def compare_year(data, title, ylabel, save, conf, filename):
     else:
         fig.tight_layout()
         plt.savefig(os.path.join(conf['Output']['directory'], filename))
-        
-
-
 
 def runtypes_hist(runtypes, save, conf, filename):
     '''
@@ -140,7 +138,7 @@ def runtypes_hist(runtypes, save, conf, filename):
     filename:   str
                 name of the file in case of saving
     '''
-    fig = plt.figure(dpi=int(conf['Plots']['dpi']))
+    fig = plt.figure(dpi=int(conf['Plot']['dpi']))
     plot = fig.add_subplot(111)
 
     ###adjust background color
@@ -150,13 +148,14 @@ def runtypes_hist(runtypes, save, conf, filename):
 
     ###text
     color_text = tuple(float(i)/255 for i in conf['Plot']['text'].split(','))
-    plot.axes.tick_params(color=color_text, labelcolor=color_text, which="both", bottom=False, top=False, left=False, labelleft=False)
- 
+    plot.axes.tick_params(color=color_text, labelcolor=color_text, which="both",
+                          bottom=False, top=False, left=False, labelleft=False)
+
     values = plt.bar(runtypes.keys(), runtypes.values(), linestyle='--')
     plt.bar_label(values, fontsize=15, color='white')
-    
+
     plot.xaxis.set_tick_params(pad=-160)
-    xtickNames = plot.set_xticklabels([i.replace('_', ' ') for i in runtypes.keys()], rotation=90)
+    plot.set_xticklabels([i.replace('_', ' ') for i in runtypes.keys()], rotation=90)
 
     ##set ylimit
     plot.set_ylim(0, max(runtypes.values()) + 2)
@@ -166,10 +165,14 @@ def runtypes_hist(runtypes, save, conf, filename):
     for spine in plot.spines.values():
         spine.set_edgecolor(color_text)
 
+    ###Add credit
+    if conf['Plot']['credit'].lower() in ['true', 'yes']:
+        plt.figtext(0.78, 0.89, 'Made with GRUNT', fontsize=6, color=color_text)
+
     ###Saving or showing
     if not save:
         plt.show()
     else:
         fig.tight_layout()
-        plt.savefig(os.path.join(conf['Output']['directory'], filename))
- 
+        plt.savefig(os.path.join(conf['Output']['directory'], filename),
+                                 dpi=int(conf['Plot']['dpi']))
