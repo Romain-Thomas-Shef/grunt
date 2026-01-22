@@ -78,7 +78,7 @@ def compare_year(data, title, ylabel, save, conf, filename):
                 name of the file in case of saving
     '''
     
-    fig = plt.figure(dpi=300)
+    fig = plt.figure(dpi=int(conf['Plots']['dpi']))
     plot = fig.add_subplot(111)
 
     ###adjust background color
@@ -140,7 +140,7 @@ def runtypes_hist(runtypes, save, conf, filename):
     filename:   str
                 name of the file in case of saving
     '''
-    fig = plt.figure(dpi=300)
+    fig = plt.figure(dpi=int(conf['Plots']['dpi']))
     plot = fig.add_subplot(111)
 
     ###adjust background color
