@@ -204,11 +204,11 @@ def get_allpaces(data, runtypes):
     runtypes:   list
                 of string (runtypes)
     '''
+    
     list_subsets = []
     for t in runtypes:
-        subset = data.loc[(data['runtype'] == t)][['date', 'pace',
-                                                   'distance']]
-        list_subsets.append(subset.reset_index(drop=True))
+        list_subsets.append(data.loc[(data['runtype'] == t)][['date', 'pace',
+                                                              'distance']])
     return list_subsets
 
 
@@ -230,20 +230,18 @@ def data_fit_straight(data, column):
     data_with_fit   :   pandas dataframe
                         with fit column data
     '''
+    
     #We can't fit over dates, so we create
     ##another quantity, days since oldest date
     mindate = min(data['date'])
-
+    
     ##get the difference
     deltas = (data['date'] - mindate).to_numpy()/(24*3600*1e9)
 
+    print(data[column].to_numpy())
+    print(deltas)
+
     ##make the fit
-    fit = scipy.stats.linregress(deltas.astype('float'), data[column].to_numpy().astype('float'))
-
-    ###fit line
-    y = fit.slope*deltas.astype('float') + fit.intercept
-
-    ##add it to the dataframe
-    data.insert(2,'Fit',y)
-
-    return data, round(fit.slope, 2)
+    scipy.stats.linregress(deltas, data[column].to_numpy())
+    
+    

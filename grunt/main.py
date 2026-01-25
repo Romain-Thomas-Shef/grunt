@@ -64,19 +64,11 @@ def main():
     elif args['yearcal']:
         print(f"Making calendar plot for {args['yearcal']}")
 
-        ###check if file exists
-        if not os.path.isfile('stats.csv'):
-            question = input('File stats.csv not found in working directory'+
-                             '..do you want to create one?[y/n]')
-            if question in ['y', 'Y', 'yes']:
-                download_data.download()
-            else:
-                print('Data not found and not created...exit...')
-                sys.exit()
+        load_data()
 
         ###load the data
         dates, values,\
-               total, average = data_process.create_data_calendar(data_process.load_data_csv('stats.csv'),
+               total, average = data_process.create_data_calendar(load_data(),
                                                                   'distance', args['yearcal'])
         ###make the calendar
         title = f"{args['yearcal']}, Current total {round(total, 2)} km; average run length = {round(average,2)} km"
@@ -85,20 +77,10 @@ def main():
 
 
     elif args['compare_distance']:
-        print(f"Making distance plots over the years")
-
-        ###check if file exists
-        if not os.path.isfile('stats.csv'):
-            question = input('File stats.csv not found in working directory'+
-                             '..do you want to create one?[y/n]')
-            if question in ['y', 'Y', 'yes']:
-                download_data.download()
-            else:
-                print('Data not found and not created...exit...')
-                sys.exit()
+        print("Making distance plots over the years")
 
         ##load data
-        data = data_process.load_data_csv('stats.csv')
+        data = load_data()
 
         ##get the years
         years = data_process.get_years_available(data)
@@ -108,30 +90,21 @@ def main():
         for year in years:
             ###load the data
             dates, values, total, \
-                   average = data_process.create_data_calendar(data, 'distance', str(year), False, cut=True)
-            years_km[year] = [data_process.overlap_year(dates, '2020'), numpy.cumsum(values)] 
+                   average = data_process.create_data_calendar(data, 'distance', str(year),
+                                                               False, cut=True)
+            years_km[year] = [data_process.overlap_year(dates, '2020'), numpy.cumsum(values)]
 
         ##make the plot
-        filename = f"Compare_distance_year.png"
+        filename = "Compare_distance_year.png"
         plots.compare_year(years_km, 'Cumulative km / year', 'distance [km]', save, conf, filename)
 
 
     elif args['runtypes']:
-        print(f"Making runtypes histograms\n")
-
-        ###check if file exists
-        if not os.path.isfile('stats.csv'):
-            question = input('File stats.csv not found in working directory'+
-                             '..do you want to create one?[y/n]')
-            if question in ['y', 'Y', 'yes']:
-                download_data.download()
-            else:
-                print('Data not found and not created...exit...')
-                sys.exit()
+        print("Making runtypes histograms\n")
 
         ##load data
-        data = data_process.load_data_csv('stats.csv')
-    
+        data = load_data()
+
         ##get the years
         if args['runtypes'] == 'current':
             year = datetime.datetime.today().year
@@ -145,8 +118,63 @@ def main():
         filename = f"runtype_{year}.png"
         plots.runtypes_hist(runtypes, save, conf, filename)
 
+    elif args['pace'] in ['running', 'trail_running', 'ultra_run', 'treadmill_running', 'all']:
+        print(f"Computing {args['pace']} pace evolution\n")
 
+        ##load the data
+        data = load_data()
+
+        ###get the runtype
+        if args['pace'] == 'all':
+            types = ['running', 'trail_running', 'treadmill_running', 'ultra_run']
+        else:
+            types = [args['pace']]
+
+        #extract the pace for the given run types
+        allpaces = data_process.get_allpaces(data, types)
+
+        ###fit a straight line for each type
+        allpaces_with_fit = []
+        slopes = []
+        for typesrun in allpaces:
+            newdf, slope = data_process.data_fit_straight(typesrun, 'pace')
+            allpaces_with_fit.append(newdf)
+            slopes.append(slope)
+
+        ##make the plot
+        filename=f"pace_evolution.png"
+        plots.pace_scatter(allpaces_with_fit, types,    
+                           conf, f'All time pace evolution for different run types', save, filename)
 
     else:
         print('Nothing to do....exit...')
         sys.exit()
+
+def load_data():
+    '''
+    This function just loads the file of data
+    if it is not found, grunt asks if the user wants to download data.
+
+    Parameter
+    ---------
+    None
+
+    Return (only if data can be found)
+    ------
+    data    :   pandas dataframe
+                running data
+    '''
+    ###check if file exists
+    if not os.path.isfile('stats.csv'):
+        question = input('File stats.csv not found in working directory'+
+                         '..do you want to create one?[y/n]')
+        if question in ['y', 'Y', 'yes']:
+            download_data.download()
+        else:
+            print('Data not found and not created...exit...')
+            sys.exit()
+
+    ##load data
+    data = data_process.load_data_csv('stats.csv')
+
+    return data

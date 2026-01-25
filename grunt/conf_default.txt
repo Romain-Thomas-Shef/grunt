@@ -1,18 +1,29 @@
 [Data]
-yearsback = 20
+yearsback = 1
 runtype = ultra_run,treadmill_running,trail_running,running
 
 
 [Plot]
-background = 0.93,0.91,0.82
-text = 0.16,0.16,0.20
+dpi = 200
+text = 228,223,202
+background = 37,42,52 
 colormap_calendar = gnuplot
-dpi = 300
-###Would be nice to leave credit=true :) 
-credit = true
-###the number of colors and signs should match the number of years in the data
-compare_colors = beige,beige,beige,beige,beige,beige,beige,red
-compare_signs = .,s,+,_,p,o,x,-.
+##Would appreciate if that stays, so GRUNT gets more visibility 
+credit = true 
+
+####Compare distance plot
+compare_colors = white,gold,yellow,deeppink,darkorange,cyan,lime,red
+compare_signs = .,.,.,.,.,.,.,.,-.
+
+####runtypes
+rt_pad = -180
+
+####pace
+pace_colors = green,deeppink,darkorange,cyan
+pace_signs = *,s,o,^
+pace_fit_colors = lime,red,orange,deepskyblue
+
+
 
 [Output]
-directory =  test
+directory =  /Users/romainthomas/github/Romain-Thomas-Shef.github.io/images/running/stats

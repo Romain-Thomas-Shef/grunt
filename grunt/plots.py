@@ -13,7 +13,7 @@ import os
 ##Third party
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-import july
+import juillet
 
 ##Local imports
 
@@ -36,9 +36,9 @@ def create_calendar(dates, values, title, save, conf, filename):
     '''
 
     ###make the plot
-    plot, fig = july.heatmap(dates, values, title=title,
+    plot, fig = juillet.heatmap(dates, values, title=title,
                              cmap=conf['Plot']['colormap_calendar'],
-                             year_label=False)
+                             year_label=False, customfigsize=(18,5))
     fig.tight_layout()
 
     ###adjust background color
@@ -152,14 +152,13 @@ def runtypes_hist(runtypes, save, conf, filename):
                           bottom=False, top=False, left=False, labelleft=False)
 
     values = plt.bar(runtypes.keys(), runtypes.values(), linestyle='--')
-    plt.bar_label(values, fontsize=15, color='white')
+    plt.bar_label(values, fontsize=15, color=color_text)
 
-    plot.xaxis.set_tick_params(pad=-160)
-    plot.set_xticklabels([i.replace('_', ' ') for i in runtypes.keys()], rotation=90)
+    plot.set_xticklabels([i.replace('_', ' ').split()[0] for i in runtypes.keys()], rotation=90)
+    plot.xaxis.set_tick_params(pad=int(conf['Plot']['rt_pad']))
 
     ##set ylimit
     plot.set_ylim(0, max(runtypes.values()) + 2)
-
 
     ###frame color
     for spine in plot.spines.values():
@@ -176,3 +175,74 @@ def runtypes_hist(runtypes, save, conf, filename):
         fig.tight_layout()
         plt.savefig(os.path.join(conf['Output']['directory'], filename),
                                  dpi=int(conf['Plot']['dpi']))
+
+def pace_scatter(data, runtypes, conf, title, save, filename):
+    '''
+    This function makes a scatter plot
+    with pace vs date
+
+    Parameters
+    ----------
+    data    : pandas dataframe
+              with a date and pace column
+
+    types   : list
+              of string with runtypes
+
+    conf    : dictionary
+              configuration of grunt
+
+    title   :   str
+                title of the plot
+
+    save    :   bool
+                if we save the plot or not
+    ''' 
+    fig = plt.figure(dpi=int(conf['Plot']['dpi']))
+    plot = fig.add_subplot(111)
+
+    ###adjust background color
+    background = tuple(float(i)/255 for i in conf['Plot']['background'].split(','))
+    fig.patch.set_facecolor(background)
+    plot.set_facecolor(background)
+
+    ###text
+    color_text = tuple(float(i)/255 for i in conf['Plot']['text'].split(','))
+    plot.set_title(title, color=color_text)
+    plot.axes.tick_params(color=color_text, labelcolor=color_text, which="both")
+    plot.set_xlabel('Year', color=color_text)
+    plot.set_ylabel('Pace [min/km]     (slow --> fast)', color=color_text)
+
+    ###frame color
+    for spine in plot.spines.values():
+        spine.set_edgecolor(color_text)
+
+    ##we revert the axis (faster at the top)
+    plot.yaxis.set_inverted(True)
+    plot.tick_params(axis='x', labelrotation=10, pad=-2)
+
+    ##make the plot
+    colors = conf['Plot']['pace_colors'].split(',')
+    colors_fit = conf['Plot']['pace_fit_colors'].split(',')
+    signs = conf['Plot']['pace_signs'].split(',')
+
+    for d,color,runtype,marker,fit in zip(data, colors, runtypes, signs, colors_fit):
+        plot.scatter(d['date'], d['pace'], marker=marker, color=color, label=runtype.replace('_', ' ').split()[0], facecolor="None")
+        plot.plot(d['date'], d['Fit'], color=fit, ls='-.')
+    
+
+    plot.legend(labelcolor=color_text, frameon=False, loc='lower left')
+
+    ###Add credit
+    if conf['Plot']['credit'].lower() in ['true', 'yes']:
+        plt.figtext(0.76, 0.12, 'Made with GRUNT', fontsize=6, color=color_text)
+
+    ###Saving or showing
+    if not save:
+        plt.show()
+    else:
+        fig.tight_layout()
+        plt.savefig(os.path.join(conf['Output']['directory'], filename),
+                                 dpi=int(conf['Plot']['dpi']))
+
+
