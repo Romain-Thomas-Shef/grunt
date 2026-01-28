@@ -37,23 +37,25 @@ def create_calendar(dates, values, title, save, conf, filename):
 
     ###make the plot
     plot, fig = juillet.heatmap(dates, values, title=title,
-                             cmap=conf['Plot']['colormap_calendar'],
+                             cmap=conf['Plot_calendar']['colormap'],
                              year_label=False, customfigsize=(18,5))
     fig.tight_layout()
 
     ###adjust background color
-    background = tuple(float(i)/255 for i in conf['Plot']['background'].split(','))
+    background = tuple(float(i)/255 for i in conf['Plot_general']['background'].split(','))
     fig.patch.set_facecolor(background)
     plot.set_facecolor(background)
 
     ###text
-    color_text = tuple(float(i)/255 for i in conf['Plot']['text'].split(','))
+    color_text = tuple(float(i)/255 for i in conf['Plot_general']['text'].split(','))
     plot.set_title(title, color=color_text)
     plot.axes.tick_params(color=color_text, labelcolor=color_text)
 
     ###Add credit
-    if conf['Plot']['credit'].lower() in ['true', 'yes']:
-        plt.figtext(0.93, 0.2, 'Made with GRUNT', fontsize=9, color=color_text)
+    if conf['Plot_calendar']['credit'].lower() in ['true', 'yes']:
+        xcredit = float(conf['Plot_calendar']['credit_x'])
+        ycredit = float(conf['Plot_calendar']['credit_y'])
+        plt.figtext(xcredit, ycredit, 'Made with GRUNT', fontsize=9, color=color_text)
 
     ###Saving or showing
     if not save:
@@ -80,24 +82,24 @@ def compare_year(data, title, ylabel, save, conf, filename):
                 name of the file in case of saving
     '''
 
-    fig = plt.figure(dpi=int(conf['Plot']['dpi']))
+    fig = plt.figure(dpi=int(conf['Plot_general']['dpi']))
     plot = fig.add_subplot(111)
 
     ###adjust background color
-    background = tuple(float(i)/255 for i in conf['Plot']['background'].split(','))
+    background = tuple(float(i)/255 for i in conf['Plot_general']['background'].split(','))
     fig.patch.set_facecolor(background)
     plot.set_facecolor(background)
 
     ###text
-    color_text = tuple(float(i)/255 for i in conf['Plot']['text'].split(','))
+    color_text = tuple(float(i)/255 for i in conf['Plot_general']['text'].split(','))
     plot.set_title(title, color=color_text)
     plot.axes.tick_params(color=color_text, labelcolor=color_text, which="both")
     plot.set_xlabel('Day-Month', color=color_text)
     plot.set_ylabel(ylabel, color=color_text)
 
     ##add the plot
-    for year,color,marker in zip(data, conf['Plot']['compare_colors'].split(','),
-                                 conf['Plot']['compare_signs']):
+    for year,color,marker in zip(data, conf['Compare_distance_plot']['compare_colors'].split(','),
+                                 conf['Compare_distance_plot']['compare_signs']):
         plot.plot(data[year][0], data[year][1], color=color, label=year,
                   marker=marker, markersize=3)
 
@@ -113,15 +115,19 @@ def compare_year(data, title, ylabel, save, conf, filename):
         spine.set_edgecolor(color_text)
 
     ###Add credit
-    if conf['Plot']['credit'].lower() in ['true', 'yes']:
-        plt.figtext(0.78, 0.89, 'Made with GRUNT', fontsize=6, color=color_text)
+    if conf['Compare_distance_plot']['credit'].lower() in ['true', 'yes']:
+        xcredit = float(conf['Compare_distance_plot']['credit_x'])
+        ycredit = float(conf['Compare_distance_plot']['credit_y']) 
+        plt.figtext(xcredit, ycredit, 'Made with GRUNT', fontsize=6, color=color_text)
 
     ###Saving or showing
     if not save:
         plt.show()
     else:
         fig.tight_layout()
-        plt.savefig(os.path.join(conf['Output']['directory'], filename))
+        plt.savefig(os.path.join(conf['Output']['directory'], filename),
+                                 dpi=int(conf['Plot_general']['dpi']))
+
 
 def runtypes_hist(runtypes, save, conf, filename):
     '''
@@ -138,16 +144,16 @@ def runtypes_hist(runtypes, save, conf, filename):
     filename:   str
                 name of the file in case of saving
     '''
-    fig = plt.figure(dpi=int(conf['Plot']['dpi']))
+    fig = plt.figure(dpi=int(conf['Plot_general']['dpi']))
     plot = fig.add_subplot(111)
 
     ###adjust background color
-    background = tuple(float(i)/255 for i in conf['Plot']['background'].split(','))
+    background = tuple(float(i)/255 for i in conf['Plot_general']['background'].split(','))
     fig.patch.set_facecolor(background)
     plot.set_facecolor(background)
 
     ###text
-    color_text = tuple(float(i)/255 for i in conf['Plot']['text'].split(','))
+    color_text = tuple(float(i)/255 for i in conf['Plot_general']['text'].split(','))
     plot.axes.tick_params(color=color_text, labelcolor=color_text, which="both",
                           bottom=False, top=False, left=False, labelleft=False)
 
@@ -155,7 +161,7 @@ def runtypes_hist(runtypes, save, conf, filename):
     plt.bar_label(values, fontsize=15, color=color_text)
 
     plot.set_xticklabels([i.replace('_', ' ').split()[0] for i in runtypes.keys()], rotation=90)
-    plot.xaxis.set_tick_params(pad=int(conf['Plot']['rt_pad']))
+    plot.xaxis.set_tick_params(pad=int(conf['Runtype_plot']['rt_pad']))
 
     ##set ylimit
     plot.set_ylim(0, max(runtypes.values()) + 2)
@@ -165,8 +171,10 @@ def runtypes_hist(runtypes, save, conf, filename):
         spine.set_edgecolor(color_text)
 
     ###Add credit
-    if conf['Plot']['credit'].lower() in ['true', 'yes']:
-        plt.figtext(0.78, 0.89, 'Made with GRUNT', fontsize=6, color=color_text)
+    if conf['Runtype_plot']['credit'].lower() in ['true', 'yes']:
+        xcredit = float(conf['Runtype_plot']['credit_x'])
+        ycredit = float(conf['Runtype_plot']['credit_y']) 
+        plt.figtext(xcredit, ycredit, 'Made with GRUNT', fontsize=6, color=color_text)
 
     ###Saving or showing
     if not save:
@@ -174,7 +182,7 @@ def runtypes_hist(runtypes, save, conf, filename):
     else:
         fig.tight_layout()
         plt.savefig(os.path.join(conf['Output']['directory'], filename),
-                                 dpi=int(conf['Plot']['dpi']))
+                                 dpi=int(conf['Plot_general']['dpi']))
 
 def pace_scatter(data, runtypes, conf, title, save, filename):
     '''
@@ -198,16 +206,16 @@ def pace_scatter(data, runtypes, conf, title, save, filename):
     save    :   bool
                 if we save the plot or not
     ''' 
-    fig = plt.figure(dpi=int(conf['Plot']['dpi']))
+    fig = plt.figure(dpi=int(conf['Plot_general']['dpi']))
     plot = fig.add_subplot(111)
 
     ###adjust background color
-    background = tuple(float(i)/255 for i in conf['Plot']['background'].split(','))
+    background = tuple(float(i)/255 for i in conf['Plot_general']['background'].split(','))
     fig.patch.set_facecolor(background)
     plot.set_facecolor(background)
 
     ###text
-    color_text = tuple(float(i)/255 for i in conf['Plot']['text'].split(','))
+    color_text = tuple(float(i)/255 for i in conf['Plot_general']['text'].split(','))
     plot.set_title(title, color=color_text)
     plot.axes.tick_params(color=color_text, labelcolor=color_text, which="both")
     plot.set_xlabel('Year', color=color_text)
@@ -222,20 +230,23 @@ def pace_scatter(data, runtypes, conf, title, save, filename):
     plot.tick_params(axis='x', labelrotation=10, pad=-2)
 
     ##make the plot
-    colors = conf['Plot']['pace_colors'].split(',')
-    colors_fit = conf['Plot']['pace_fit_colors'].split(',')
-    signs = conf['Plot']['pace_signs'].split(',')
+    colors = conf['Pace_plot']['colors'].split(',')
+    colors_fit = conf['Pace_plot']['fit_colors'].split(',')
+    signs = conf['Pace_plot']['signs'].split(',')
 
     for d,color,runtype,marker,fit in zip(data, colors, runtypes, signs, colors_fit):
-        plot.scatter(d['date'], d['pace'], marker=marker, color=color, label=runtype.replace('_', ' ').split()[0], facecolor="None")
+        plot.scatter(d['date'], d['pace'], marker=marker, color=color,
+                     label=runtype.replace('_', ' ').split()[0], facecolor="None")
         plot.plot(d['date'], d['Fit'], color=fit, ls='-.')
     
 
     plot.legend(labelcolor=color_text, frameon=False, loc='lower left')
 
     ###Add credit
-    if conf['Plot']['credit'].lower() in ['true', 'yes']:
-        plt.figtext(0.76, 0.12, 'Made with GRUNT', fontsize=6, color=color_text)
+    if conf['Pace_plot']['credit'].lower() in ['true', 'yes']:
+        xcredit = float(conf['Pace_plot']['credit_x'])
+        ycredit = float(conf['Pace_plot']['credit_y']) 
+        plt.figtext(xcredit, ycredit, 'Made with GRUNT', fontsize=6, color=color_text)
 
     ###Saving or showing
     if not save:
@@ -243,6 +254,6 @@ def pace_scatter(data, runtypes, conf, title, save, filename):
     else:
         fig.tight_layout()
         plt.savefig(os.path.join(conf['Output']['directory'], filename),
-                                 dpi=int(conf['Plot']['dpi']))
+                                 dpi=int(conf['Plot_general']['dpi']))
 
 
