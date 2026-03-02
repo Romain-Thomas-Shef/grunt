@@ -69,7 +69,8 @@ def create_data_calendar(data, parameter, year, log=True, cut=False):
     if cut is True and end>datetime.today().date():
         end = datetime.today().date()
 
-    date_range = numpy.arange(start, end, timedelta(days=1)).astype(datetime)
+    date_range = numpy.arange(start, end+timedelta(days=1),
+                              timedelta(days=1)).astype(datetime)
 
     ##create the correspondionog array for the data
     parameter_data = numpy.zeros(len(date_range))
