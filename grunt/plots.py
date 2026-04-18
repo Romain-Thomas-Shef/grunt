@@ -165,7 +165,7 @@ def runtypes_hist(runtypes, save, conf, filename):
     plot.xaxis.set_tick_params(pad=int(conf['Runtype_plot']['rt_pad']))
 
     ##set ylimit
-    plot.set_ylim(0, max(runtypes.values()) + 2)
+    plot.set_ylim(0, 1.2*max(runtypes.values()))
 
     ###frame color
     for spine in plot.spines.values():

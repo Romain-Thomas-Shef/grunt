@@ -23,7 +23,7 @@ GRUNT is a very small tool that I made to track my running stats. I have used th
 
 **Contribute:**
 If you find a bug or would like to propose a new feature, I would appreciate if you could write an issue in the `github <https://github.com/Romain-Thomas-Shef/grunt/>`_ repository.
-If you want to contribute to the development. If this is your case please have a look at the :doc:`dev_notes` and if you have any question you can write to and R.Thomas (romain.alexis.gerard.thomas@gmail.com). 
+If you want to contribute to the development. If this is your case please have a look at the :doc:`dev_notes` and if you have any question you can write to me (romain.alexis.gerard.thomas@gmail.com). 
 
 .. warning::
 
@@ -49,4 +49,6 @@ Table of content
 
  installation.rst
  get_started.rst
+ download.rst
+ make_the_plot.rst
  dev_notes.rst

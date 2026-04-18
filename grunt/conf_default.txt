@@ -46,4 +46,4 @@ credit_x = 0.70
 credit_y = 0.80
 
 [Output]
-directory =  /Users/romainthomas/github/Romain-Thomas-Shef.github.io/images/running/stats
+directory =  ~/
