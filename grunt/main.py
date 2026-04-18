@@ -131,7 +131,7 @@ def main():
             types = [args['pace']]
 
         #extract the pace for the given run types
-        allpaces = data_process.get_allpaces(data, types)
+        allpaces, _ = data_process.get_allpacesanddistance(data, types, min(data['date']))
 
         ###fit a straight line for each type
         allpaces_with_fit = []
@@ -145,6 +145,23 @@ def main():
         filename=f"pace_evolution.png"
         plots.pace_scatter(allpaces_with_fit, types,    
                            conf, f'All time pace evolution for different run types', save, filename)
+
+
+    elif args['pvd']:
+        print(f"Plotting pace vs distance for all runs\n")
+
+        ##load the data
+        data = load_data()
+
+        ###get the runtype
+        types = ['running', 'trail_running', 'treadmill_running', 'ultra_run']
+
+        #extract the pace for the given run types
+        allpaces, alldeltas = data_process.get_allpacesanddistance(data, types, min(data['date']))
+
+        filename=f"pace_vs_distance.png"
+        plots.pacedistance_scatter(allpaces, types,    
+                           conf, f'All time pace vs distance', save, filename)
 
     else:
         print('Nothing to do....exit...')

@@ -14,6 +14,7 @@ import os
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import juillet
+import numpy
 
 ##Local imports
 
@@ -257,3 +258,88 @@ def pace_scatter(data, runtypes, conf, title, save, filename):
                                  dpi=int(conf['Plot_general']['dpi']))
 
 
+def pacedistance_scatter(data, runtypes, conf, title, save, filename):
+    '''
+    This function makes a scatter plot
+    with pace vs date
+
+    Parameters
+    ----------
+    data    : pandas dataframe
+              with a date and pace column
+
+    types   : list
+              of string with runtypes
+
+    conf    : dictionary
+              configuration of grunt
+
+    title   :   str
+                title of the plot
+
+    save    :   bool
+                if we save the plot or not
+    ''' 
+    fig = plt.figure(dpi=int(conf['Plot_general']['dpi']))
+    plot = fig.add_subplot(111)
+
+    ###adjust background color
+    background = tuple(float(i)/255 for i in conf['Plot_general']['background'].split(','))
+    fig.patch.set_facecolor(background)
+    plot.set_facecolor(background)
+
+    ###text
+    color_text = tuple(float(i)/255 for i in conf['Plot_general']['text'].split(','))
+    plot.set_title(title, color=color_text)
+    plot.axes.tick_params(color=color_text, labelcolor=color_text, which="both")
+    plot.set_xlabel('Distance [km]', color=color_text)
+    plot.set_ylabel('Pace [min/km]   (slow --> fast)', color=color_text)
+
+    ###frame color
+    for spine in plot.spines.values():
+        spine.set_edgecolor(color_text)
+
+    ##we revert the axis (faster at the top)
+    plot.yaxis.set_inverted(True)
+
+    ##make the plot
+    signs = conf['Pacedistance_plot']['signs'].split(',')
+
+
+    #Check for limits
+    vmin = 0
+    vmax = 0
+    for dataset in data:
+        if max(dataset['deltas'])>vmax:
+            vmax = max(dataset['deltas'])
+    
+    for d,runtype,marker in zip(data, runtypes, signs):
+        sc = plot.scatter(d['distance'], d['pace'], marker=marker, c=d['deltas']+1,
+                     label=runtype.replace('_', ' ').split()[0], facecolor="None",
+                     lw=0.5, cmap=conf['Pacedistance_plot']['colormap'], vmin=vmin, vmax=vmax)
+
+    ###legend
+    legend = plot.legend(labelcolor=color_text, frameon=False, loc='upper right', ncol=2, fontsize=7)
+    for i in range(4):
+        legend.legend_handles[i].set_edgecolor('lime')
+
+    #Plot colorbar
+    cbar = fig.colorbar(sc, pad=0.01)  
+    cbar.set_ticks([])
+    label = cbar.ax.yaxis.label
+    label.set_text("Date   [OLD <----> RECENT]")
+    label.set_color('white')
+
+    ###Add credit
+    if conf['Pace_plot']['credit'].lower() in ['true', 'yes']:
+        xcredit = float(conf['Pacedistance_plot']['credit_x'])
+        ycredit = float(conf['Pacedistance_plot']['credit_y']) 
+        plt.figtext(xcredit, ycredit, 'Made with GRUNT', fontsize=6, color=color_text)
+
+    ###Saving or showing
+    if not save:
+        plt.show()
+    else:
+        fig.tight_layout()
+        plt.savefig(os.path.join(conf['Output']['directory'], filename),
+                                 dpi=int(conf['Plot_general']['dpi']))

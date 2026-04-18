@@ -194,9 +194,10 @@ def get_runtypes(data, year, conf):
 
     return dict_runtype
 
-def get_allpaces(data, runtypes):
+def get_allpacesanddistance(data, runtypes, mindate):
     '''
-    This extract the paces for the required runtypes
+    This extract the paces and corresponding distance
+    for each runtype
 
     Parameters
     ----------
@@ -204,13 +205,22 @@ def get_allpaces(data, runtypes):
                 running data
     runtypes:   list
                 of string (runtypes)
+    mindate:    date
+                mininmum date over all data
     '''
     list_subsets = []
+    alldeltas = []
     for t in runtypes:
         subset = data.loc[(data['runtype'] == t)][['date', 'pace',
                                                    'distance']]
+        deltas = (subset['date'] - mindate).to_numpy()/(24*3600*1e9)
+        subset.insert(2, 'deltas', deltas.astype('float'))
+
+        ##get the difference
+        alldeltas.append(deltas)
         list_subsets.append(subset.reset_index(drop=True))
-    return list_subsets
+
+    return list_subsets,alldeltas
 
 
 def data_fit_straight(data, column):

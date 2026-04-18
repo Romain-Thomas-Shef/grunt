@@ -49,6 +49,8 @@ def command_line_interface(args):
     parser.add_argument('--conf', type=str,
                                   help='Configuration file, if not used, GRUNT will use default')
     parser.add_argument('--runtypes', nargs='?', help='Run types histograms', const='current')
+    parser.add_argument('--pvd', action='store_true',
+                        help='All time pace vs distance for all types of run')
     parser.add_argument('--pace', nargs='?',
                         help='All time pace evolution for a run type (default is running)',
                         choices=['running', 'ultra_run', 'treadmill_running',
