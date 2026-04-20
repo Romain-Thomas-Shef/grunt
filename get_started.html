@@ -1,0 +1,237 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Getting started &mdash; grunt 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Download data" href="download.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            grunt
+              <img src="_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Getting started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#command-line-interface">Command line interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configuration-file">Configuration file</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="download.html">Download data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="make_the_plot.html">Grunt data visualisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev_notes.html">Development corner</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">grunt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Getting started</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/get_started.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="getting-started">
+<h1>Getting started<a class="headerlink" href="#getting-started" title="Link to this heading"></a></h1>
+<section id="command-line-interface">
+<h2>Command line interface<a class="headerlink" href="#command-line-interface" title="Link to this heading"></a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Before getting started with GRUNT you need to give your computer access to Garmin. To do this I am using <a class="reference external" href="https://github.com/cyberjunky/python-garminconnect">python_garminconnect</a>. At the time of writing I am using v0.2.38.</p>
+</div>
+<p>Once installed properly, you can run GRUNT from the terminal. GRUNT comes with a command line interface that you can find using:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>user@machine % grunt --help
+</pre></div>
+</div>
+<p>And this will give:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: grunt [-h] [--download] [--yearcal YEARCAL] [--compare_distance] [--conf CONF] [--runtypes [RUNTYPES]] [--pvd] [--pace [{running,ultra_run,treadmill_running,trail_running,all}]] [--save]
+
+------------------------------------------------
+ - GRUNT: Garmin RUNning sTatistic
+ - Authors: R. Thomas
+ - Licence: MIT -
+------------------------------------------------
+
+options:
+  -h, --help            show this help message and exit
+  --conf CONF           Configuration file, if not used, GRUNT will use default
+  --download            Get the data from garmin connect
+  --save                Instead of showing the plot,it will be saved (need a custom conf file)
+  --yearcal YEARCAL     The year you want the calendar for, default is current year
+  --compare_distance    Will compare the distance for all the years available in the data
+  --runtypes [RUNTYPES]
+                        Run types histograms
+  --pvd                 All time pace vs distance for all types of run
+  --pace [{running,ultra_run,treadmill_running,trail_running,all}]
+                        All time pace evolution for a run type (default is running)
+</pre></div>
+</div>
+<p>In details, there are three categories of arguments:</p>
+<ul class="simple">
+<li><p>Configuration:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">--conf</span></code> + <code class="docutils literal notranslate"><span class="pre">file</span></code>: This loads your personnal configuration (see below).</p></li>
+</ul>
+</li>
+<li><p>Data download:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">--download</span></code>: this download the latest data from your Garmin profile (see <a class="reference internal" href="download.html"><span class="doc">Download data</span></a>)</p></li>
+</ul>
+</li>
+<li><p>Plots:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">--save</span></code>: can be used with all the other plot arguments. It saves the figure in disk.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--yearcal</span></code> + <code class="docutils literal notranslate"><span class="pre">year</span></code>: This creates a calendar of all your runs. Run distance is highlighter via a colormap scheme.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--compare_distance</span></code>: This will create a plot with one single cumulative distance curve per year.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--runtypes</span></code>: This will make a histogram of run types.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--pvd</span></code>: This makes a scatter plot with distance vs pace. Points are color coded based on date.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--pace</span></code> + <code class="docutils literal notranslate"><span class="pre">runtype</span></code>: This creates a scatter plot with pace vs date. Runtype are the one defined by Garmin. You can use these options: <code class="docutils literal notranslate"><span class="pre">running</span></code>, <code class="docutils literal notranslate"><span class="pre">ultra_run</span></code>, <code class="docutils literal notranslate"><span class="pre">treadmill_running</span></code>, <code class="docutils literal notranslate"><span class="pre">trail_running</span></code>, <code class="docutils literal notranslate"><span class="pre">all</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="configuration-file">
+<h2>Configuration file<a class="headerlink" href="#configuration-file" title="Link to this heading"></a></h2>
+<p>GRUNT needs a configuration file to run. You can find it below and this can be copied to any text file. This is the default configuration that you can of course modify and test. Each section is explained in the rest of the documentation where it makes sense to talk about it.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>You need to adjust the Directory at the bottom. This is the absolute path.</p>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[Data]
+yearsback = 10
+runtype = ultra_run,treadmill_running,trail_running,running
+
+[Plot_general]
+dpi = 200
+text = 228,223,202
+background = 37,42,52
+
+[Plot_calendar]
+colormap = gnuplot
+##Would appreciate if that stays, so GRUNT gets more visibility
+credit = true
+credit_x = 0.90
+credit_y = 0.15
+
+[Compare_distance_plot]
+####Compare distance plot
+compare_colors = white,gold,yellow,deeppink,darkorange,cyan,lime,red
+compare_signs = .,.,.,.,.,.,.,.,-.
+##Would appreciate if that stays, so GRUNT gets more visibility
+credit = true
+credit_x = 0.75
+credit_y = 0.15
+
+
+[Pace_plot]
+colors = green,deeppink,darkorange,cyan
+signs = *,s,o,^
+fit_colors = lime,red,orange,deepskyblue
+##Would appreciate if that stays, so GRUNT gets more visibility
+credit = true
+credit_x = 0.75
+credit_y = 0.13
+
+[Runtype_plot]
+rt_pad = -100
+##Would appreciate if that stays, so GRUNT gets more visibility
+credit = true
+credit_x = 0.10
+credit_y = 0.80
+
+[Pacedistance_plot]
+signs = *,s,o,^
+colormap = gnuplot
+##Would appreciate if that stays, so GRUNT gets more visibility
+credit = true
+credit_x = 0.70
+credit_y = 0.13
+
+[Output]
+directory =
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="download.html" class="btn btn-neutral float-right" title="Download data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, R. Thomas.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,286 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grunt data visualisation &mdash; grunt 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Development corner" href="dev_notes.html" />
+    <link rel="prev" title="Download data" href="download.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            grunt
+              <img src="_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="get_started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="download.html">Download data</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Grunt data visualisation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#general-configuation">General configuation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-density-calendar">Running density calendar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#run-type-histogram">Run type histogram</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cumulative-running-distance">Cumulative running Distance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pace-evolution-over-time">Pace evolution over time</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#all-time-pace-vs-distance">All time Pace vs Distance</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dev_notes.html">Development corner</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">grunt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Grunt data visualisation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/make_the_plot.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="grunt-data-visualisation">
+<h1>Grunt data visualisation<a class="headerlink" href="#grunt-data-visualisation" title="Link to this heading"></a></h1>
+<p>This is where I explain what plots GRUNT can make and how you can customize them. We are assuming that you already downloaded the data. If you did not, please look at <a class="reference internal" href="download.html"><span class="doc">Download data</span></a>.</p>
+<section id="general-configuation">
+<h2>General configuation<a class="headerlink" href="#general-configuation" title="Link to this heading"></a></h2>
+<p>In the configuration file, three options are available and will be used throughout the rest:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">Plot_general</span><span class="p">]</span>
+<span class="n">dpi</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="n">text</span> <span class="o">=</span> <span class="mi">228</span><span class="p">,</span><span class="mi">223</span><span class="p">,</span><span class="mi">202</span>
+<span class="n">background</span> <span class="o">=</span> <span class="mi">37</span><span class="p">,</span><span class="mi">42</span><span class="p">,</span><span class="mi">52</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">dpi</span></code> controls the resolution, <code class="docutils literal notranslate"><span class="pre">text</span></code> control the text color (given in RGB values), <code class="docutils literal notranslate"><span class="pre">background</span></code> gives the general background of the plot (in RGB values as well).</p>
+<p>In addition, each of the other section you will allow you to adjust the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##Would appreciate if that stays, so GRUNT gets more visibility</span>
+<span class="n">credit</span> <span class="o">=</span> <span class="n">true</span>
+<span class="n">credit_x</span> <span class="o">=</span> <span class="mf">0.90</span>
+<span class="n">credit_y</span> <span class="o">=</span> <span class="mf">0.15</span>
+</pre></div>
+</div>
+<p>This displays the <strong>“Made with GRUNT”</strong> text on the plot. I’d appreciate you leave it. But of course you don’t have to. You can change <code class="docutils literal notranslate"><span class="pre">credit</span> <span class="pre">=</span> <span class="pre">true</span></code> to <code class="docutils literal notranslate"><span class="pre">credit</span> <span class="pre">=</span> <span class="pre">false</span></code> to remove. The two other parameters are adjusting the position of the text.</p>
+</section>
+<section id="running-density-calendar">
+<h2>Running density calendar<a class="headerlink" href="#running-density-calendar" title="Link to this heading"></a></h2>
+<p>This plot is the equivalent of the GitHub commit density calendar adapted for running. To create it you need to enter the following command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">user</span><span class="nd">@machine</span> <span class="o">%</span> <span class="n">grunt</span> <span class="o">--</span><span class="n">yearcal</span> <span class="mi">2026</span> <span class="o">--</span><span class="n">conf</span> <span class="n">conf_default</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+<p>In the configuration file, the customization available are:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">Plot_calendar</span><span class="p">]</span>
+<span class="n">colormap</span> <span class="o">=</span> <span class="n">gnuplot</span>
+
+<span class="c1">##Would appreciate if that stays, so GRUNT gets more visibility</span>
+<span class="n">credit</span> <span class="o">=</span> <span class="n">true</span>
+<span class="n">credit_x</span> <span class="o">=</span> <span class="mf">0.90</span>
+<span class="n">credit_y</span> <span class="o">=</span> <span class="mf">0.15</span>
+</pre></div>
+</div>
+<p>The only major control you have for the that plot is the colormap scheme. You can use whatever is available in matplotlib. The resulting calendar is shown below:</p>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="_images/calendar.png"><img alt="_images/calendar.png" src="_images/calendar.png" width="700" />
+</a>
+<figcaption>
+<p><span class="caption-text">Running density Calendar</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="run-type-histogram">
+<h2>Run type histogram<a class="headerlink" href="#run-type-histogram" title="Link to this heading"></a></h2>
+<p>The second plot that you can do is the run type histogram. It shows you the number of each type of run you do in a given year. The command to create it:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">user</span><span class="nd">@machine</span> <span class="o">%</span> <span class="n">grunt</span> <span class="o">--</span><span class="n">runtype</span> <span class="mi">2025</span> <span class="o">--</span><span class="n">conf</span> <span class="n">conf_default</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+<p>The customisation in the configuration file is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">Runtype_plot</span><span class="p">]</span>
+<span class="n">rt_pad</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span>
+
+<span class="c1">##Would appreciate if that stays, so GRUNT gets more visibility</span>
+<span class="n">credit</span> <span class="o">=</span> <span class="n">true</span>
+<span class="n">credit_x</span> <span class="o">=</span> <span class="mf">0.15</span>
+<span class="n">credit_y</span> <span class="o">=</span> <span class="mf">0.90</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">rt_pad</span></code> adjust the position of the vertical text on each bar of the histogram. The final results shows is visible in the next figure.</p>
+<figure class="align-center" id="id2">
+<a class="reference internal image-reference" href="_images/histogram.png"><img alt="_images/histogram.png" src="_images/histogram.png" width="400" />
+</a>
+<figcaption>
+<p><span class="caption-text">Run type histogram</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="cumulative-running-distance">
+<h2>Cumulative running Distance<a class="headerlink" href="#cumulative-running-distance" title="Link to this heading"></a></h2>
+<p>The cumulative running distance plots overlaps on the same plot a curve for each year available on the data. Each curves represent the cumulative distance over the year. To create it, enter the following command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">user</span><span class="nd">@machine</span> <span class="o">%</span> <span class="n">grunt</span> <span class="o">--</span><span class="n">conf</span> <span class="n">conf_default</span><span class="o">.</span><span class="n">txt</span> <span class="o">--</span><span class="n">compare_distance</span>
+</pre></div>
+</div>
+<p>The available customisation parameters are</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">Compare_distance_plot</span><span class="p">]</span>
+<span class="c1">####Compare distance plot</span>
+<span class="n">compare_colors</span> <span class="o">=</span> <span class="n">white</span><span class="p">,</span><span class="n">gold</span><span class="p">,</span><span class="n">yellow</span><span class="p">,</span><span class="n">deeppink</span><span class="p">,</span><span class="n">darkorange</span><span class="p">,</span><span class="n">cyan</span><span class="p">,</span><span class="n">lime</span><span class="p">,</span><span class="n">red</span>
+<span class="n">compare_signs</span> <span class="o">=</span> <span class="o">.</span><span class="p">,</span><span class="o">.</span><span class="p">,</span><span class="o">.</span><span class="p">,</span><span class="o">.</span><span class="p">,</span><span class="o">.</span><span class="p">,</span><span class="o">.</span><span class="p">,</span><span class="o">.</span><span class="p">,</span><span class="o">.</span><span class="p">,</span><span class="o">-.</span>
+
+<span class="c1">##Would appreciate if that stays, so GRUNT gets more visibility</span>
+<span class="n">credit</span> <span class="o">=</span> <span class="n">true</span>
+<span class="n">credit_x</span> <span class="o">=</span> <span class="mf">0.75</span>
+<span class="n">credit_y</span> <span class="o">=</span> <span class="mf">0.15</span>
+</pre></div>
+</div>
+<p>Two main parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">compare_colors</span></code>: The color of each curve. You should have one color per year.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">compare_signs</span></code>: the linestyle of each curve.</p></li>
+</ul>
+<p>The resulting figure is visible below.</p>
+<figure class="align-center" id="id3">
+<a class="reference internal image-reference" href="_images/compare_distance.png"><img alt="_images/compare_distance.png" src="_images/compare_distance.png" width="500" />
+</a>
+<figcaption>
+<p><span class="caption-text">Cumulative running distance</span><a class="headerlink" href="#id3" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="pace-evolution-over-time">
+<h2>Pace evolution over time<a class="headerlink" href="#pace-evolution-over-time" title="Link to this heading"></a></h2>
+<p>The next plot that you can do is the all-time evolution of the pace with time for a given running type. The command is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">user</span><span class="nd">@machine</span> <span class="o">%</span> <span class="n">grunt</span> <span class="o">--</span><span class="n">conf</span> <span class="n">conf_default</span><span class="o">.</span><span class="n">txt</span> <span class="o">--</span><span class="n">pace</span> <span class="n">OPTION</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">OPTION</span></code> can take the following options: <code class="docutils literal notranslate"><span class="pre">running</span></code>, <code class="docutils literal notranslate"><span class="pre">ultra_run</span></code>, <code class="docutils literal notranslate"><span class="pre">treadmill_running</span></code>, <code class="docutils literal notranslate"><span class="pre">trail_running</span></code>, <code class="docutils literal notranslate"><span class="pre">all</span></code>. For each type, GRUNT will make a linear fit of the data.</p>
+<p>Customisable parameters are:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">Pace_plot</span><span class="p">]</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="n">green</span><span class="p">,</span><span class="n">deeppink</span><span class="p">,</span><span class="n">darkorange</span><span class="p">,</span><span class="n">cyan</span>
+<span class="n">signs</span> <span class="o">=</span> <span class="o">*</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">o</span><span class="p">,</span><span class="o">^</span>
+<span class="n">fit_colors</span> <span class="o">=</span> <span class="n">lime</span><span class="p">,</span><span class="n">red</span><span class="p">,</span><span class="n">orange</span><span class="p">,</span><span class="n">deepskyblue</span>
+
+<span class="c1">##Would appreciate if that stays, so GRUNT gets more visibility</span>
+<span class="n">credit</span> <span class="o">=</span> <span class="n">true</span>
+<span class="n">credit_x</span> <span class="o">=</span> <span class="mf">0.75</span>
+<span class="n">credit_y</span> <span class="o">=</span> <span class="mf">0.13</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">colors</span></code> lets you choose the color of the plot. If you asked for <code class="docutils literal notranslate"><span class="pre">all</span></code>, you need to give 4 colors. As this is a scatter plot, you will also need to give the marker <code class="docutils literal notranslate"><span class="pre">signs</span></code>. One for each run type as well. Finally, you need to choose the color of the fit (<code class="docutils literal notranslate"><span class="pre">fit_colors</span></code>). Again, one for each run type.</p>
+<p>This gives you the following figure:</p>
+<figure class="align-center" id="id4">
+<a class="reference internal image-reference" href="_images/pace_evolution.png"><img alt="_images/pace_evolution.png" src="_images/pace_evolution.png" width="500" />
+</a>
+<figcaption>
+<p><span class="caption-text">All time Evolution of the pace per running type (‘all’ option)</span><a class="headerlink" href="#id4" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id5">
+<a class="reference internal image-reference" href="_images/trail_running_pace.png"><img alt="_images/trail_running_pace.png" src="_images/trail_running_pace.png" width="500" />
+</a>
+<figcaption>
+<p><span class="caption-text">All time Evolution of the pace per running type (‘trail_running’ option)</span><a class="headerlink" href="#id5" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="all-time-pace-vs-distance">
+<h2>All time Pace vs Distance<a class="headerlink" href="#all-time-pace-vs-distance" title="Link to this heading"></a></h2>
+<p>The pace vs distance is the next one you can have a look at. The command to run it is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">user</span><span class="nd">@machine</span> <span class="o">%</span> <span class="n">grunt</span> <span class="o">--</span><span class="n">pvd</span> <span class="o">--</span><span class="n">conf</span> <span class="n">conf_default</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+<p>Again, the available customization are:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">Pacedistance_plot</span><span class="p">]</span>
+<span class="n">signs</span> <span class="o">=</span> <span class="o">*</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">o</span><span class="p">,</span><span class="o">^</span>
+<span class="n">colormap</span> <span class="o">=</span> <span class="n">gnuplot</span>
+
+<span class="c1">##Would appreciate if that stays, so GRUNT gets more visibility</span>
+<span class="n">credit</span> <span class="o">=</span> <span class="n">true</span>
+<span class="n">credit_x</span> <span class="o">=</span> <span class="mf">0.65</span>
+<span class="n">credit_y</span> <span class="o">=</span> <span class="mf">0.13</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">signs</span></code> gives the sign to attribute to each runtype while <code class="docutils literal notranslate"><span class="pre">colormap</span></code> colors the markers based on the date.</p>
+<figure class="align-center" id="id6">
+<a class="reference internal image-reference" href="_images/pace_distance.png"><img alt="_images/pace_distance.png" src="_images/pace_distance.png" width="500" />
+</a>
+<figcaption>
+<p><span class="caption-text">All time, all type, pace VS distance</span><a class="headerlink" href="#id6" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="download.html" class="btn btn-neutral float-left" title="Download data" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="dev_notes.html" class="btn btn-neutral float-right" title="Development corner" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, R. Thomas.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
